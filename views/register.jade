@@ -1,0 +1,12 @@
+﻿extends layout
+
+block content
+  
+  form(name="register", method="post", action"/register")
+    div.form-group
+      input(type="text", name="user", placeholder="Username").form-control        
+      input(type="password", name="pwd", placeholder="Password").form-control        
+      input(type="password", name="pwd2", placeholder="Confirm Password").form-control        
+      button(type="submit").btn.btn-default enviar
+      h3 Usuario: #{user}
+      h3 Senha: #{pwd}
