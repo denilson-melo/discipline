@@ -1,4 +1,4 @@
-﻿exports.index = function (req, res) {
+exports.index = function (req, res) {
     res.render('index', { title: 'Express', year: new Date().getFullYear() });
 };
 
@@ -13,6 +13,10 @@ exports.contact = function (req, res) {
 exports.register = function (req, res) {
     res.render('register', 200);
 };
+
+exports.showusers = function (req, res){
+    res.render('showusers',200);
+}
 
 exports.adduser = function (req, res){
     var crypto = require('crypto');

@@ -1,12 +1,19 @@
-﻿extends layout
+extends layout
 
 block content
-  
-  form(name="register", method="post", action"/register")
+  form(name="register", method="post", action="/register", ).form-horizontal
+    div.form-group.has-warning
+      label.control-label Usuario
+      input(type="text", name="user", placeholder="Username").form-control      
+    div.form-group.has-warning
+      label.control-label Senha
+      input(type="password", name="pwd", id="pwd", placeholder="Password", onchange="validate()").form-control        
+    div.form-group.has-warning
+      label.control-label Confirmar Senha
+      input(type="password", name="pwdRepeat", id="pwdRepeat", placeholder="Confirm Password", onchange="validate()").form-control        
     div.form-group
-      input(type="text", name="user", placeholder="Username").form-control        
-      input(type="password", name="pwd", placeholder="Password").form-control        
-      input(type="password", name="pwd2", placeholder="Confirm Password").form-control        
-      button(type="submit").btn.btn-default enviar
-      h3 Usuario: #{user}
-      h3 Senha: #{pwd}
+      button(type="submit").btn.btn-default.btn-lg.col-sm-2.col-sm-offset-5 enviar
+    h3 Usuario: #{user}
+    h3 Senha: #{pwd}
+    h3#teste vish
+    

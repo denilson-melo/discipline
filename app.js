@@ -1,8 +1,9 @@
-﻿
+
 /**
  * Module dependencies.
  */
 
+var mysql = require('mysql');
 var express = require('express');
 var routes = require('./routes/');
 var http = require('http');
@@ -34,6 +35,7 @@ app.get('/about', routes.about);
 app.get('/contact', routes.contact);
 app.get('/register', routes.register);
 app.post('/register', routes.adduser);
+app.get('/showusers', routes.showusers);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
