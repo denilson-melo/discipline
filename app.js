@@ -1,4 +1,4 @@
-
+﻿
 /**
  * Module dependencies.
  */
@@ -30,12 +30,21 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+connection = mysql.createConnection({
+    host : 'localhost',
+    user : 'root',
+    password: '',
+    database: 'proto'
+});
+connection.connect();
+
 app.get('/', routes.index);
 app.get('/about', routes.about);
 app.get('/contact', routes.contact);
 app.get('/register', routes.register);
 app.post('/register', routes.adduser);
-app.get('/showusers', routes.showusers);
+app.get('/showusers', routes.getshowusers);
+app.post('/showusers', routes.postshowusers);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

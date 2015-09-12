@@ -1,4 +1,19 @@
 extends layout
 
 block content
-    p usuarios aqui
+    h1 Tabela de usuarios
+    table.table
+      thead
+        tr
+        - each item in fields
+          th= item.name          
+      tbody
+        - each item in rows
+          tr
+           td= item.iduser
+           td= item.name
+           td= item.password
+    form( method="post", action="/showusers" )
+      input( type="text", name="name", placeholder="name").form-control
+      input( type="text", name="password", placeholder="password").form-control
+      input( type="submit" value="enviar" ).btn

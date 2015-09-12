@@ -1,3 +1,5 @@
+var dbTools = require('../dbtools');
+
 exports.index = function (req, res) {
     res.render('index', { title: 'Express', year: new Date().getFullYear() });
 };
@@ -14,8 +16,21 @@ exports.register = function (req, res) {
     res.render('register', 200);
 };
 
-exports.showusers = function (req, res){
-    res.render('showusers',200);
+//GET rows fields
+exports.getshowusers = function (req, res){    
+    dbTools.fetchUsers(function (rows, fields) {
+        res.render('showusers', { rows : rows, fields : fields } );    
+    });
+}
+
+//POST name password
+exports.postshowusers = function (req, res) {
+    var name = req.param('name');
+    var password = req.param('password');
+    dbTools.insertUser(name, password);
+    dbTools.fetchUsers(function (rows, fields) {
+        res.render('showusers', { rows : rows, fields : fields });
+    });
 }
 
 exports.adduser = function (req, res){
