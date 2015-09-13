@@ -44,24 +44,6 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-function isLoggedIn(req, res, next) {
-    
-    // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
-        return next();
-    
-    // if they aren't redirect them to the home page
-    res.redirect('/login');
-}
-
-app.get('/', routes.index);
-app.get('/about', routes.about);
-app.get('/contact', routes.contact);
-app.get('/register', routes.register);
-app.post('/register', routes.adduser);
-app.get('/showusers', isLoggedIn, routes.getshowusers);
-app.get('/login', routes.login);
-app.get('/signup', routes.signup);
 require('./routes/routes.js')(app, passport);
 
 http.createServer(app).listen(app.get('port'), function () {

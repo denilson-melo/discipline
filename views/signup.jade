@@ -9,8 +9,10 @@ block content
             form(class='form-signup', action='/signup', method='POST')
               input(type='text', name='username' class='form-control', placeholder='Username',required, autofocus)
               input(type='password', name='password' class='form-control', placeholder='Password', required)
+              select(name='group').col-sm-12.form-control
+                -each item in groups
+                  option= item.group
               button(class='btn btn-lg btn-primary btn-block', type='submit') Sign Up
               span.clearfix
-              -if(messages)
-                div#note #{messages}
-            h1.text-center.error-message #{message}
+              -if(message)
+                p= message

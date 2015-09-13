@@ -7,8 +7,8 @@ module.exports = function (passport){
         done(null, user.name);
     });
 
-    passport.deserializeUser(function (id, done) {
-        dbTools.findUserById(id, function (err, rows, fields) {
+    passport.deserializeUser(function (username, done) {
+        dbTools.findUserByName(username, function (err, rows, fields) {
             done(err, rows);
         })
     });
@@ -28,38 +28,30 @@ module.exports = function (passport){
         });
     }
     ));
-
+    
+//body username, password, group
     passport.use('signup', new LocalStrategy({
         passReqToCallback : true
     },
     function (req, username, password, done) {
         process.nextTick(function () {
+            //Gets the user group from the form
+            var group = req.body.group;
             dbTools.findUserByName(username, function (err, user) {
-                console.log('!!!!!!', password);
                 if (err)
                     return done(null);
                 if (user)
                     return done(null, false, req.flash('signUpMessage', 'Username already in use'));
+                //Encrypt password and insert the user with it
                 var securePassword = dbTools.generateHash(password);
-                dbTools.insertUser(username, securePassword);
+                dbTools.insertUser(username, securePassword, group);
+                //Find the user again to return it to the callback
+                dbTools.findUserByName(username, function (err, user){
+                    return done(null, user);
+                })
             });
         });
     }
     ));
-
-//passport.use('singup', new LocalStrategy({
-//    passReqToCallback : true
-//},
-//function (req, username, password, done) {
-//    findOrCreateUser = function () {
-//        dbTools.findUserByName(username, function (err, rows, fields) {
-//            if (rows) {
-//                console.log("User already exists");
-//            }
-//            dbTools.insertUser(username, password);
-//        });
-//    }
-//}
-//));
 
 }

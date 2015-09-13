@@ -24,8 +24,8 @@ module.exports = {
     }
     ,
     //insertUser
-    insertUser : function (name, password){
-        connection.query('INSERT INTO user(name,password) VALUES(?,?)', [name, password] , function (err, rows, fields) {
+    insertUser : function (name, password, group){
+        connection.query('INSERT INTO user(name,password,user.group) VALUES(?,?,?)', [name, password, group] , function (err, rows, fields) {
             if (err) console.log(err);     
         });
     },
@@ -41,11 +41,15 @@ module.exports = {
             callback(err, rows[0]);
         })
     },
+    getUserGroups : function (callback){
+        connection.query('SELECT DISTINCT user.group FROM user', function (err, rows, fields){
+            callback(err, rows);
+        })
+    },
     generateHash : function (password){
         return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     },
     validPassword : function (passwordInput, passwordFound) {
-        console.log('!!!!!!', passwordFound);
         return bcrypt.compareSync(passwordInput, passwordFound);
     }
 };

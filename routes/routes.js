@@ -1,22 +1,70 @@
-﻿module.exports = function (app, passport) {    
+﻿var dbTools = require('../config/mysql.js');
+
+function isLoggedIn(req, res, next) {
+    //If user is authenticated continue the route
+    if (req.isAuthenticated())
+        return next();
+    // If they aren't redirect them to the home page
+    res.redirect('/login');
+}
+
+function needsGroup(group) {
+    return function (req, res, next) {
+        //If there's a user serialized, evaluate it's group, else redirect to the login page
+        if (req.user) {
+            //If the serialized users group equals the passed parameter the route coninues, else gives 401
+            if (req.user.group == group) {
+                next();
+            } else {
+                res.send(401, 'Unauthorized');
+            }
+        } else {
+            res.redirect('/login');
+        }
+    };
+}
+
+module.exports = function (app, passport) {
+//Index    
+    app.get('/', function (req, res) {
+        res.render('index', { title: 'Express', year: new Date().getFullYear() });
+    });
+//About
+    app.get('/about', function (req, res) {
+        res.render('about', { title: 'About', year: new Date().getFullYear(), message: 'Your application description page1.' });
+    });
+//Contact    
+    app.get('/contact', needsGroup('night'), function (req, res) {
+        console.log(req.session.passport.user);
+        res.render('contact', { title: 'Contact', year: new Date().getFullYear(), message: 'Your contact page.' });
+    });
+//Showusers    
+    app.get('/showusers', isLoggedIn, function (req, res) {
+        dbTools.fetchUsers(function (rows, fields) {
+            res.render('showusers', { rows : rows, fields : fields });
+        });
+    });
+//Login
+    app.get('/login', function (req, res) {
+        res.render('login', { message : req.flash('loginMessage') });
+    });
     app.post('/login', passport.authenticate('login', {
         successRedirect: '/showusers',
         failureRedirect: '/login',     
         failureFlash : true
     }));
+//SignUp view(message, groups)
+    app.get('/signup', function (req, res) {
+        dbTools.getUserGroups(function (err, rows) {
+            res.render('signup', {
+                groups : rows,
+                message : req.flash('signUpMessage')
+            });
+        });
+    });
     app.post('/signup', passport.authenticate('signup', {
         successRedirect: '/showusers',
         failureRedirect: '/signup',
-        failureFlash : true   
-    }))
-}
-
-function isLoggedIn(req, res, next) {
-    
-    // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
-        return next();
-    
-    // if they aren't redirect them to the home page
-    res.redirect('/');
+        failureFlash : true
+    }));
 }
