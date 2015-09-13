@@ -1,4 +1,4 @@
-var dbTools = require('../dbtools');
+var dbTools = require('../config/mysql.js');
 
 exports.index = function (req, res) {
     res.render('index', { title: 'Express', year: new Date().getFullYear() });
@@ -17,10 +17,19 @@ exports.register = function (req, res) {
 };
 
 //GET rows fields
-exports.getshowusers = function (req, res){    
+exports.getshowusers = function (req, res){
     dbTools.fetchUsers(function (rows, fields) {
         res.render('showusers', { rows : rows, fields : fields } );    
     });
+}
+
+
+exports.login = function (req, res){
+    res.render('login', { message : req.flash('loginMessage') });    
+}
+
+exports.signup = function (req, res){    
+    res.render('signup', { message : req.flash('signUpMessage') });
 }
 
 //POST name password
@@ -45,4 +54,11 @@ exports.adduser = function (req, res){
         user: req.param('user'),
         pwd: crypted
     });
+}
+
+exports.loginPost = function (passport) {
+        passport.authenticate('login', {
+            successRedirect: '/showusers',
+            failureRedirect: '/about'
+        });
 }
