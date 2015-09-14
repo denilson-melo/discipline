@@ -1,0 +1,29 @@
+﻿extends layout
+block content
+  div.container.col
+    h1 Criar turma
+    form.form-horizontal
+      label Disciplina
+      select(name="disciplina").form-control
+        -if(disciplina)
+          -each item in disciplina
+            option(value=item.id )= item.nome
+      input(type="text", name="codigo").form-control
+      input(type="submit").btn
+    h1 Gerenciar turmas
+    table.table
+      thead
+        -if(turmasEmAberto)
+          -each value, key in turmasEmAberto[0]
+            th= key
+      tbody
+        -each item in turmasEmAberto
+          tr
+          -each value, key in item
+            td= value
+    h2 Turmas
+    -if(turmasEmAberto)
+      -each item in turmasEmAberto
+        h3 Codigo: #{item.codigo}
+        h3 Horarios:
+        h4 

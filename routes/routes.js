@@ -44,6 +44,26 @@ module.exports = function (app, passport) {
             res.render('showusers', { rows : rows, fields : fields });
         });
     });
+//Professor
+    app.get('/professor', function (req, res) {
+        //Get professores + responsavel + turma + disciplina
+        dbTools.fetchProfessor(function (err, professor) {
+            if (err) res.render('/', 200);
+            dbTools.fetchProfessorCargaHorariaSemanal(function (err, rows) {
+                res.render('professor', { professor : professor, cargaHoraria : rows });
+            });
+        })
+    });
+//Criarturma
+    app.get('/criarturma', function (req, res) {
+        dbTools.fetchDisciplina(function (err, rows){
+            var disciplina = rows;
+            dbTools.fetchTurmasAbertas(function (err, rows){
+                console.log(rows);
+                res.render('criarturma', { disciplina : disciplina, turmasEmAberto : rows });
+            })
+        })
+    });
 //Login
     app.get('/login', function (req, res) {
         res.render('login', { message : req.flash('loginMessage') });

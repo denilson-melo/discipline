@@ -1,0 +1,22 @@
+﻿extends layout
+block content
+  -if(professor)
+    table.table
+      thead
+        -each value, key in professor[0]
+          th= key
+      tbody
+        -each item in professor
+          tr
+          -each value, key in item
+            td= value 
+    h1 Carga horaria semanal total
+    table.table
+      thead
+        -each value, key in cargaHoraria[0]
+          th= key
+      tbody
+        -each item in cargaHoraria
+          tr
+          -each value, key in item
+            td= value

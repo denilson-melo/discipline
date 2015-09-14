@@ -23,6 +23,36 @@ module.exports = {
     });
     }
     ,
+    //fetchProfessor
+    fetchProfessor : function (callback){
+        connection.query('SELECT * FROM professor JOIN responsavel JOIN turma JOIN disciplina '
+                        +'WHERE professor.id = responsavel.fkprofessor '
+                        + 'AND responsavel.fkturma = turma.id '
+                        + 'AND turma.fkdisciplina = disciplina.id;', function (err, rows, fields){
+            callback(err, rows);
+        })
+    }
+    ,
+    fetchDisciplina : function (callback){
+        connection.query('SELECT id, nome FROM disciplina', function (err, rows, fields){
+            callback(err, rows);
+        })
+    },
+    fetchTurmasAbertas : function (callback){
+        connection.query('SELECT * FROM turma JOIN horaaula WHERE turma.id = horaaula.fkturma AND horaaula.avaliando = 1', function (err, rows, fields){
+            callback(err, rows);
+        })
+    }
+    ,
+    fetchProfessorCargaHorariaSemanal : function (callback){
+        connection.query('SELECT nomeProfessor, sum(cargaHorariaSemanal) FROM professor JOIN responsavel JOIN turma JOIN disciplina ' 
+                        + 'WHERE professor.id = responsavel.fkprofessor ' 
+                        + 'AND responsavel.fkturma = turma.id ' 
+                        + 'AND turma.fkdisciplina = disciplina.id;', function (err, rows, fields) {
+            callback(err, rows);
+        })
+    }
+    ,
     //insertUser
     insertUser : function (name, password, group){
         connection.query('INSERT INTO user(name,password,user.group) VALUES(?,?,?)', [name, password, group] , function (err, rows, fields) {
