@@ -58,11 +58,36 @@ module.exports = function (app, passport) {
     app.get('/criarturma', function (req, res) {
         dbTools.fetchDisciplina(function (err, rows){
             var disciplina = rows;
-            dbTools.fetchTurmasAbertas(function (err, rows){
-                console.log(rows);
-                res.render('criarturma', { disciplina : disciplina, turmasEmAberto : rows });
+            dbTools.fetchTurmasAbertas2(function (err, rows){
+                var packed = [];
+                var temp = {};
+                var k = 0;
+                var id = rows[0].fkturma;
+                temp['codigo'] = rows[0].codigo;
+                temp['nomeDisciplina'] = rows[0].nomeDisciplina;
+                for (i = 0; i < rows.length; i++) {
+                    if (id == rows[i].fkturma) {
+                        k++;
+                        temp['inicio'+k] = rows[i].inicio;
+                        temp['fim'+k] = rows[i].fim;
+                    } else {
+                        k = 0;
+                        id = rows[i].fkturma;
+                        packed.push(temp);
+                        temp = {};
+                        temp['codigo'] = rows[i].codigo;
+                        temp['nomeDisciplina'] = rows[i].nomeDisciplina
+                        i--;
+                    }
+                }
+                packed.push(temp);
+                res.render('criarturma', { disciplina : disciplina, turmasEmAberto : packed });
             })
         })
+    });
+    app.post('/criarturma', function (req, res) {
+        console.log('!!!!!!!', req.body);
+        
     });
 //Login
     app.get('/login', function (req, res) {

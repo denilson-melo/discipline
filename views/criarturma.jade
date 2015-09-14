@@ -2,14 +2,14 @@
 block content
   div.container.col
     h1 Criar turma
-    form.form-horizontal
+    form( method="POST", action="/criarturma").form-horizontal
       label Disciplina
       select(name="disciplina").form-control
         -if(disciplina)
           -each item in disciplina
-            option(value=item.id )= item.nome
+            option(value=item.id )= item.nomeDisciplina
       input(type="text", name="codigo").form-control
-      input(type="submit").btn
+      input(type="submit", name="criar").btn
     h1 Gerenciar turmas
     table.table
       thead
@@ -24,6 +24,10 @@ block content
     h2 Turmas
     -if(turmasEmAberto)
       -each item in turmasEmAberto
-        h3 Codigo: #{item.codigo}
-        h3 Horarios:
-        h4 
+        div.container
+          h1 #{item.codigo}
+          h3 Disciplina: #{item.nomeDisciplina}
+          h3 Horarios: 
+          h3 #{item.inicio1} - #{item.fim1}
+          h3 #{item.inicio2} - #{item.fim2}
+          h4 

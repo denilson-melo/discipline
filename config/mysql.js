@@ -34,13 +34,24 @@ module.exports = {
     }
     ,
     fetchDisciplina : function (callback){
-        connection.query('SELECT id, nome FROM disciplina', function (err, rows, fields){
+        connection.query('SELECT id, nomeDisciplina FROM disciplina', function (err, rows, fields){
             callback(err, rows);
         })
     },
     fetchTurmasAbertas : function (callback){
         connection.query('SELECT * FROM turma JOIN horaaula WHERE turma.id = horaaula.fkturma AND horaaula.avaliando = 1', function (err, rows, fields){
             callback(err, rows);
+        })
+    }
+    ,
+    fetchTurmasAbertas2 : function (callback) {
+        connection.query('SELECT horaaula.id, horaaula.fkturma, codigo, nomeDisciplina, inicio,fim FROM turma JOIN horaaula JOIN disciplina ' 
+                        +'WHERE turma.id = horaaula.fkturma '
+                        +'AND turma.fkdisciplina = disciplina.id '
+                        +'AND horaaula.avaliando = 1 '
+                        + 'ORDER BY horaaula.fkturma DESC; ', 
+            function (err, rows, fields) {
+                callback(err, rows);
         })
     }
     ,
